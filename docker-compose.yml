@@ -38,6 +38,14 @@ services:
      # Add extra Java options by uncommenting the following line
      #- EXTRA_JAVA_OPTIONS=-Xmx4g
     restart: always
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
   sonarqube:
     image: sonarqube:community
     depends_on:
