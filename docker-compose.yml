@@ -11,6 +11,14 @@ services:
     volumes:
       - /var/jenkins_home
     restart: always
+  postgresql: # BANCO DE DADOS POSTGRESQL
+    image: orchardup/postgresql:latest
+    environment:
+      - POSTGRESQL_USER=sonar
+      - POSTGRESQL_PASS=xaexohquaetiesoo
+      - POSTGRESQL_DB=sonar
+    volumes:
+      - "$PWD/postgresql:/var/lib/postgresql"
   artifactory:
     image: docker.bintray.io/jfrog/artifactory-oss:5.3.1
     container_name: artifactory
