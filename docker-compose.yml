@@ -30,7 +30,7 @@ services:
      # Add extra Java options by uncommenting the following line
      #- EXTRA_JAVA_OPTIONS=-Xmx4g
     restart: always
-    sonarqube:
+  sonarqube:
     image: sonarqube:community
     depends_on:
       - db
