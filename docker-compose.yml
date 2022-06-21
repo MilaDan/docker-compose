@@ -21,26 +21,32 @@ services:
     volumes:
       - "$PWD/postgresql:/var/lib/postgresql"
   artifactory:
-    image: docker.bintray.io/jfrog/artifactory-oss:5.3.1
+    image: mattgruter/artifactory #releases-docker.jfrog.io/jfrog/artifactory-oss:latest
     container_name: artifactory
-    ports:
-     - 80:8081
-    depends_on:
-     - postgresql
-    links:
-     - postgresql
-    volumes:
-     - /data/artifactory:/var/opt/jfrog/artifactory
     environment:
-     - DB_TYPE=postgresql
-     # The following must match the POSTGRES_USER and POSTGRES_PASSWORD values passed to PostgreSQL
-     - DB_USER=artifactory
-     - DB_PASSWORD=password
-     # Add extra Java options by uncommenting the following line
-     #- EXTRA_JAVA_OPTIONS=-Xmx4g
+      - 8082:8082
+    networks:
+      - frog
+#    ports:
+#      - 8082:8082
+#      - 8081:8081 
+    volumes:
+#       - var/artifactory_home
+      - "$PWD/artifactory:/var/lib/artifactory"
+      - "$PWD/artifactory_data:/var/lib/artifactory/data"
     restart: always
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: "50m"
+#        max-file: "10"
+#    ulimits:
+#      nproc: 65535
+#      nofile:
+#        soft: 32000
+#        hard: 40000
   sonarqube:
-    image: sonarqube:community
+    image: sonarqube #:community
     depends_on:
       - db
     environment:
@@ -68,3 +74,17 @@ volumes:
   sonarqube_logs:
   postgresql:
   postgresql_data:
+  artifactory:
+  artifactory_data:
+  
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: ${PWD}/data/artifactory/
+networks:
+  frog:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.77.0/24
